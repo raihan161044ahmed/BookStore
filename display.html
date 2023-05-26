@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookStore</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <style>
+      .container {
+        background-color: #e0e4e9;
+        margin-top: 1.5%;
+        padding: 40px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Display Data</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Password</th>
+            <th>Email</th>
+            <th>Division</th>
+            <th>Gender</th>
+            <th>Category</th>
+            <th>Address</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+        </tbody>
+      </table>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- js -->
+    <script>
+        // Retrieve the form data from local storage
+        var storedData = localStorage.getItem('formData');
+        var formData = JSON.parse(storedData);
+      
+        // Get the table body element
+        var tableBody = document.getElementById('tableBody');
+      
+        // Create a table row
+        var row = document.createElement('tr');
+      
+        // Create a cell for each value and append it to the row
+        var nameCell = document.createElement('td');
+        nameCell.textContent = formData.name;
+        row.appendChild(nameCell);
+      
+        var passwordCell = document.createElement('td');
+        passwordCell.textContent = formData.password;
+        row.appendChild(passwordCell);
+      
+        var emailCell = document.createElement('td');
+        emailCell.textContent = formData.email;
+        row.appendChild(emailCell);
+      
+        var dropdownCell = document.createElement('td');
+        dropdownCell.textContent = formData.dropdown;
+        row.appendChild(dropdownCell);
+      
+        var radioCell = document.createElement('td');
+        radioCell.textContent = formData.radio;
+        row.appendChild(radioCell);
+      
+        var checkboxCell = document.createElement('td');
+        checkboxCell.textContent = formData.checkbox.join(', ');
+        row.appendChild(checkboxCell);
+      
+        var textareaCell = document.createElement('td');
+        textareaCell.textContent = formData.textarea;
+        row.appendChild(textareaCell);
+      
+        // Append the row to the table body
+        tableBody.appendChild(row);
+      </script>
+      
+  </body>
+</html>
