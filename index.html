@@ -13,8 +13,10 @@
     <style>
       .container {
         background-color: #e0e4e9;
-        margin-top: 1.5%;
-        padding: 40px;
+        margin-top: 10px;
+        padding-bottom: 20px;
+        padding-top: 10px;
+        padding-left: 7%;
       }
     </style>
   </head>
@@ -28,6 +30,7 @@
             type="text"
             class="form-control mb-3"
             id="name"
+            style="width: 70%"
             placeholder="Enter your name"
             required
           />
@@ -38,6 +41,7 @@
             type="password"
             class="form-control mb-3"
             id="password"
+            style="width: 70%"
             placeholder="Enter your password"
             required
           />
@@ -48,13 +52,14 @@
             type="email"
             class="form-control mb-3"
             id="email"
+            style="width: 70%"
             placeholder="Example@gmail.com"
             required
           />
         </div>
         <div class="form-group">
           <label for="dropdown">Division:</label>
-          <select class="form-control mb-3" id="dropdown">
+          <select class="form-control mb-3" id="dropdown" style="width: 70%">
             <option>Dhaka</option>
             <option>Chittagong</option>
             <option>Rajshahi</option>
@@ -86,6 +91,16 @@
                 value="Female"
               />Female
             </label>
+          </div>
+          <div class="form-check-inline mx-5">
+            <label for="date" class="mb-2">Date Of Birth:</label>
+            <input
+              type="date"
+              class="form-control mb-3"
+              id="date"
+              style="width: 600px"
+              required
+            />
           </div>
         </div>
         <div class="form-group">
@@ -143,7 +158,12 @@
         </div>
         <div class="form-group">
           <label for="textarea">Address:</label>
-          <textarea class="form-control mb-3" id="textarea" rows="3"></textarea>
+          <textarea
+            class="form-control mb-3"
+            id="textarea"
+            rows="4"
+            style="width: 70%"
+          ></textarea>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
       </form>
@@ -181,19 +201,9 @@
         var checkboxValues = Array.from(checkbox).map(function (element) {
           return element.value;
         });
+        var date = document.getElementById("date").value;
         var textarea = document.querySelector("#textarea").value;
-        if (
-          !name ||
-          !password ||
-          !email ||
-          !dropdown ||
-          !radio ||
-          !checkbox ||
-          !textarea
-        ) {
-          alert("Please fill in all fields.");
-          return; // Stop form submission
-        }
+
         // Create an object to store the form data
         var formData = {
           name: name,
@@ -203,6 +213,7 @@
           radio: radio,
           checkbox: checkboxValues,
           textarea: textarea,
+          date: date,
         };
 
         // Store the form data in local storage
