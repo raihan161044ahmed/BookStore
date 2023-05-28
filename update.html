@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookStore</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <style>
+      .container {
+        background-color: #e0e4e9;
+        margin-top: 10px;
+        padding-bottom: 20px;
+        padding-top: 10px;
+        padding-left: 7%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Registration</h2>
+      <form action="./display.html" method="POST" id="formDataForm">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            class="form-control mb-3"
+            id="name"
+            style="width: 70%"
+            placeholder="Enter your name"
+          />
+        </div>
+        <div class="form-group">
+          <label for="password">Password:</label>
+          <input
+            type="password"
+            class="form-control mb-3"
+            id="password"
+            style="width: 70%"
+            placeholder="Enter your password"
+          />
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            class="form-control mb-3"
+            id="email"
+            style="width: 70%"
+            placeholder="Example@gmail.com"
+          />
+        </div>
+        <div class="form-group">
+          <label for="dropdown">Division:</label>
+          <select class="form-control mb-3" id="dropdown" style="width: 70%">
+            <option value="" disabled selected>Select Division</option>
+            <option>Dhaka</option>
+            <option>Chittagong</option>
+            <option>Rajshahi</option>
+            <option>Sylhet</option>
+            <option>Barisal</option>
+            <option>Mymensingh</option>
+            <option>Khulna</option>
+            <option>Rangpur</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="radio">Gender:</label><br />
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="radio"
+                class="form-check-input mb-3 mx-2"
+                name="radio"
+                value="Male"
+              />Male
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="radio"
+                class="form-check-input mb-3 mx-2"
+                name="radio"
+                value="Female"
+              />Female
+            </label>
+          </div>
+          <div class="form-check-inline mx-5">
+            <label for="date" class="mb-2">Date Of Birth:</label>
+            <input
+              type="date"
+              class="form-control mb-3"
+              id="date"
+              style="width: 260%"
+            />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="checkbox">Category:</label><br />
+          <div class="form-check-inline mb-3">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input mx-2 mx-2"
+                name="checkbox"
+                value="Poetry"
+              />Poetry
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input mx-2"
+                name="checkbox"
+                value="Fiction"
+              />Fiction
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input mx-2"
+                name="checkbox"
+                value="Thriller"
+              />Thriller
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input mx-2"
+                name="checkbox"
+                value="Fantasy"
+              />Fantasy
+            </label>
+          </div>
+          <div class="form-check-inline">
+            <label class="form-check-label">
+              <input
+                type="checkbox"
+                class="form-check-input mx-2"
+                name="checkbox"
+                value="Science Fiction"
+              />Science Fiction
+            </label>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="textarea">Address:</label>
+          <textarea
+            class="form-control mb-3"
+            id="textarea"
+            rows="4"
+            style="width: 70%"
+          ></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Update</button>
+      </form>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+      integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+      integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- js -->
+    <script>
+      // Get the form element
+      var form = document.querySelector("form");
+      // Validate form inputs
+      function validateForm() {
+        var name = document.getElementById("name").value;
+        var password = document.getElementById("password").value;
+
+        var email = document.getElementById("email").value;
+        var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+        var radio = document.getElementsByName("radio");
+        var date = document.getElementById("date").value.trim();
+        var currentDate = new Date();
+        var selectedDate = new Date(date);
+        var checkbox = document.querySelectorAll(
+          'input[name="checkbox"]:checked'
+        );
+
+        if (name == null || name.trim() === "") {
+          alert("Name can't be blank");
+          return false;
+        } else if (password == null || password.trim() === "") {
+          alert("Password can't be blank");
+          return false;
+        } else if (!emailRegex.test(email)) {
+          alert("Invalid email address");
+          return false;
+        } else if (!(radio[0].checked || radio[1].checked)) {
+          alert("Please Select Gender");
+          return false;
+        } else if (date === "") {
+          alert("Date field is required");
+          return false;
+        } else if (selectedDate > currentDate) {
+          alert("Invalid date. Please select a date in the past or today");
+          return false;
+        } else if (checkbox.length === 0) {
+          alert("Please select at least one category");
+          return false;
+        }
+        return true; // Return true if validation passes
+      }
+
+      // Add a submit event listener to the form
+      form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent form submission
+
+        // Perform form validation
+        if (!validateForm()) {
+          return; // Stop execution if validation fails
+        }
+
+        //after submition travel next page
+        window.location.href = "display.html";
+
+        // Get the input values
+        var name = document.querySelector("#name").value;
+        var password = document.querySelector("#password").value;
+        var email = document.querySelector("#email").value;
+        var dropdown = document.querySelector("#dropdown").value;
+        var radio = document.querySelector('input[name="radio"]:checked').value;
+        var checkbox = document.querySelectorAll(
+          'input[name="checkbox"]:checked'
+        );
+        var checkboxValues = Array.from(checkbox).map(function (element) {
+          return element.value;
+        });
+        var date = document.getElementById("date").value;
+        var textarea = document.querySelector("#textarea").value;
+
+        // Create an object to store the form data
+        var formData = {
+          name: name,
+          password: password,
+          email: email,
+          dropdown: dropdown,
+          radio: radio,
+          checkbox: checkboxValues,
+          textarea: textarea,
+          date: date,
+        };
+
+        // Retrieve existing form data from local storage
+        var storedData = localStorage.getItem("formData");
+        var existingData = storedData ? JSON.parse(storedData) : [];
+
+        // Append the new form data to the existing data
+        existingData.push(formData);
+
+        // Store the updated form data in local storage
+        localStorage.setItem("formData", JSON.stringify(existingData));
+
+        // Clear the form inputs
+        form.reset();
+
+        // Show a success message
+        alert("Form updated successfully!");
+      });
+    </script>
+  </body>
+</html>
