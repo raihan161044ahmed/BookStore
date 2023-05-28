@@ -32,7 +32,6 @@
             id="name"
             style="width: 70%"
             placeholder="Enter your name"
-            required
           />
         </div>
         <div class="form-group">
@@ -43,7 +42,6 @@
             id="password"
             style="width: 70%"
             placeholder="Enter your password"
-            required
           />
         </div>
         <div class="form-group">
@@ -54,12 +52,12 @@
             id="email"
             style="width: 70%"
             placeholder="Example@gmail.com"
-            required
           />
         </div>
         <div class="form-group">
           <label for="dropdown">Division:</label>
           <select class="form-control mb-3" id="dropdown" style="width: 70%">
+            <option value="" disabled selected>Select Division</option>
             <option>Dhaka</option>
             <option>Chittagong</option>
             <option>Rajshahi</option>
@@ -99,7 +97,6 @@
               class="form-control mb-3"
               id="date"
               style="width: 260%"
-              required
             />
           </div>
         </div>
@@ -184,11 +181,55 @@
     <script>
       // Get the form element
       var form = document.querySelector("form");
+      // Validate form inputs
+      function validateForm() {
+        var name = document.getElementById("name").value;
+        var password = document.getElementById("password").value;
+
+        var email = document.getElementById("email").value;
+        var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+
+        var radio = document.getElementsByName("radio");
+        var date = document.getElementById("date").value.trim();
+        var currentDate = new Date();
+        var selectedDate = new Date(date);
+        var checkbox = document.querySelectorAll(
+          'input[name="checkbox"]:checked'
+        );
+
+        if (name == null || name.trim() === "") {
+          alert("Name can't be blank");
+          return false;
+        } else if (password == null || password.trim() === "") {
+          alert("Password can't be blank");
+          return false;
+        } else if (!emailRegex.test(email)) {
+          alert("Invalid email address");
+          return false;
+        } else if (!(radio[0].checked || radio[1].checked)) {
+          alert("Please Select Gender");
+          return false;
+        } else if (date === "") {
+          alert("Date field is required");
+          return false;
+        } else if (selectedDate > currentDate) {
+          alert("Invalid date. Please select a date in the past or today");
+          return false;
+        } else if (checkbox.length === 0) {
+          alert("Please select at least one category");
+          return false;
+        }
+        return true; // Return true if validation passes
+      }
 
       // Add a submit event listener to the form
       form.addEventListener("submit", function (event) {
         event.preventDefault(); // Prevent form submission
 
+        // Perform form validation
+        if (!validateForm()) {
+          return; // Stop execution if validation fails
+        }
         // Get the input values
         var name = document.querySelector("#name").value;
         var password = document.querySelector("#password").value;
@@ -225,10 +266,10 @@
 
         // Store the updated form data in local storage
         localStorage.setItem("formData", JSON.stringify(existingData));
-        
+
         // Clear the form inputs
-           form.reset();
-        
+        form.reset();
+
         // Show a success message
         alert("Form submitted successfully!");
       });
