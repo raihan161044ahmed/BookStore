@@ -225,7 +225,10 @@
 
         // Store the updated form data in local storage
         localStorage.setItem("formData", JSON.stringify(existingData));
-
+        
+        // Clear the form inputs
+           form.reset();
+        
         // Show a success message
         alert("Form submitted successfully!");
       });
