@@ -12,31 +12,30 @@
     />
     <style>
       .container {
-        background-color: #e0e4e9;
         margin-top: 1.5%;
         padding: 40px;
       }
     </style>
   </head>
   <body>
-    <div class="container">
+    <div class="container bg-white">
       <h2>Display Data</h2>
-      <table class="table">
+      <table class="table table-striped mt-5">
         <thead>
           <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Password</th>
-            <th>Email</th>
-            <th>Division</th>
-            <th>Gender</th>
-            <th>Category</th>
-            <th>Address</th>
-            <th>Date OF Birth</th>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Password</th>
+            <th scope="col">Email</th>
+            <th scope="col">Division</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Category</th>
+            <th scope="col">Address</th>
+            <th scope="col">Date OF Birth</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
-        <tbody id="tableBody">
-        </tbody>
+        <tbody id="tableBody"></tbody>
       </table>
     </div>
 
@@ -54,63 +53,122 @@
     <!-- js -->
     <script>
       // Retrieve the form data from local storage
-      var storedData = localStorage.getItem('formData');
-    
+      var storedData = localStorage.getItem("formData");
+
       // Parse the form data JSON string
       var formData = JSON.parse(storedData);
-    
+
       // Get the table body element
-      var tableBody = document.getElementById('tableBody');
-    
+      var tableBody = document.getElementById("tableBody");
+
       // Iterate over the form data and create table rows
       for (var i = 0; i < formData.length; i++) {
         var data = formData[i];
-    
+
         // Create a table row
-        var row = document.createElement('tr');
-    
+        var row = document.createElement("tr");
+
         // Create table cells for each data field
-        var idCell = document.createElement('td');
+        var idCell = document.createElement("td");
         idCell.textContent = i + 1;
         row.appendChild(idCell);
-    
-        var nameCell = document.createElement('td');
+
+        var nameCell = document.createElement("td");
         nameCell.textContent = data.name;
         row.appendChild(nameCell);
-    
-        var passwordCell = document.createElement('td');
+
+        var passwordCell = document.createElement("td");
         passwordCell.textContent = data.password;
         row.appendChild(passwordCell);
-    
-        var emailCell = document.createElement('td');
+
+        var emailCell = document.createElement("td");
         emailCell.textContent = data.email;
         row.appendChild(emailCell);
-    
-        var divisionCell = document.createElement('td');
+
+        var divisionCell = document.createElement("td");
         divisionCell.textContent = data.dropdown;
         row.appendChild(divisionCell);
-    
-        var genderCell = document.createElement('td');
+
+        var genderCell = document.createElement("td");
         genderCell.textContent = data.radio;
         row.appendChild(genderCell);
-    
-        var categoryCell = document.createElement('td');
-        categoryCell.textContent = data.checkbox.join(', ');
+
+        var categoryCell = document.createElement("td");
+        categoryCell.textContent = data.checkbox.join(", ");
         row.appendChild(categoryCell);
-    
-        var addressCell = document.createElement('td');
+
+        var addressCell = document.createElement("td");
         addressCell.textContent = data.textarea;
+        addressCell.style.whiteSpace = "pre-wrap"; // Apply white-space CSS property
+        addressCell.style.minWidth = "10px"; // Set minimum width for the cell
+        addressCell.style.maxWidth = "200px"; // Set maximum width for the cell
         row.appendChild(addressCell);
-    
-        var dobCell = document.createElement('td');
+
+        var dobCell = document.createElement("td");
         dobCell.textContent = data.date;
         row.appendChild(dobCell);
-    
+
+        // Add edit button
+        var editCell = document.createElement("td");
+        var editButton = document.createElement("button");
+        editButton.textContent = "Update";
+        editButton.style.backgroundColor = "gold";
+        editButton.addEventListener("click", function () {
+          // Redirect to update.html page with the corresponding data
+          var queryString =
+            "?name=" +
+            encodeURIComponent(data.name) +
+            "&password=" +
+            encodeURIComponent(data.password) +
+            "&email=" +
+            encodeURIComponent(data.email) +
+            "&dropdown=" +
+            encodeURIComponent(data.dropdown) +
+            "&radio=" +
+            encodeURIComponent(data.radio) +
+            "&date=" +
+            encodeURIComponent(data.date) +
+            "&checkbox=" +
+            encodeURIComponent(data.checkbox.join(",")) +
+            "&textarea=" +
+            encodeURIComponent(data.textarea);
+
+          // Redirect to update.html with the query string
+          window.location.href = "update.html" + queryString;
+        });
+        editCell.appendChild(editButton);
+        row.appendChild(editCell);
+
+        // Add delete button
+        var deleteCell = document.createElement("td");
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.style.backgroundColor = "tomato";
+        deleteButton.addEventListener("click", function () {
+          // Find the index of the data object in the existingData array
+          var index = existingData.indexOf(data);
+
+          // Check if the data object exists in the array
+          if (index > -1) {
+            // Remove the data object from the array
+            existingData.splice(index, 1);
+
+            // Remove the corresponding row from the table
+            tableBody.removeChild(row);
+
+            // Update the local storage with the modified data
+            localStorage.setItem("formData", JSON.stringify(existingData));
+
+            // Show a success message or perform any additional operations
+            alert("Data deleted successfully!");
+          }
+        });
+        deleteCell.appendChild(deleteButton);
+        row.appendChild(deleteCell);
+
         // Append the row to the table body
         tableBody.appendChild(row);
       }
     </script>
-    
-      
   </body>
 </html>
