@@ -23,7 +23,7 @@
   <body>
     <div class="container">
       <h2>Registration</h2>
-      <form action="/display.html">
+      <form action="./display.html" method="POST" id="formDataForm">
         <div class="form-group">
           <label for="name">Name:</label>
           <input
@@ -98,7 +98,7 @@
               type="date"
               class="form-control mb-3"
               id="date"
-              style="width: 600px"
+              style="width: 260%"
               required
             />
           </div>
@@ -216,11 +216,15 @@
           date: date,
         };
 
-        // Store the form data in local storage
-        localStorage.setItem("formData", JSON.stringify(formData));
+        // Retrieve existing form data from local storage
+        var storedData = localStorage.getItem("formData");
+        var existingData = storedData ? JSON.parse(storedData) : [];
 
-        // Clear the form inputs
-        form.reset();
+        // Append the new form data to the existing data
+        existingData.push(formData);
+
+        // Store the updated form data in local storage
+        localStorage.setItem("formData", JSON.stringify(existingData));
 
         // Show a success message
         alert("Form submitted successfully!");
