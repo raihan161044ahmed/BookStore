@@ -24,6 +24,7 @@
       <table class="table">
         <thead>
           <tr>
+            <th>Id</th>
             <th>Name</th>
             <th>Password</th>
             <th>Email</th>
@@ -31,6 +32,7 @@
             <th>Gender</th>
             <th>Category</th>
             <th>Address</th>
+            <th>Date OF Birth</th>
           </tr>
         </thead>
         <tbody id="tableBody">
@@ -51,48 +53,64 @@
 
     <!-- js -->
     <script>
-        // Retrieve the form data from local storage
-        var storedData = localStorage.getItem('formData');
-        var formData = JSON.parse(storedData);
-      
-        // Get the table body element
-        var tableBody = document.getElementById('tableBody');
-      
+      // Retrieve the form data from local storage
+      var storedData = localStorage.getItem('formData');
+    
+      // Parse the form data JSON string
+      var formData = JSON.parse(storedData);
+    
+      // Get the table body element
+      var tableBody = document.getElementById('tableBody');
+    
+      // Iterate over the form data and create table rows
+      for (var i = 0; i < formData.length; i++) {
+        var data = formData[i];
+    
         // Create a table row
         var row = document.createElement('tr');
-      
-        // Create a cell for each value and append it to the row
+    
+        // Create table cells for each data field
+        var idCell = document.createElement('td');
+        idCell.textContent = i + 1;
+        row.appendChild(idCell);
+    
         var nameCell = document.createElement('td');
-        nameCell.textContent = formData.name;
+        nameCell.textContent = data.name;
         row.appendChild(nameCell);
-      
+    
         var passwordCell = document.createElement('td');
-        passwordCell.textContent = formData.password;
+        passwordCell.textContent = data.password;
         row.appendChild(passwordCell);
-      
+    
         var emailCell = document.createElement('td');
-        emailCell.textContent = formData.email;
+        emailCell.textContent = data.email;
         row.appendChild(emailCell);
-      
-        var dropdownCell = document.createElement('td');
-        dropdownCell.textContent = formData.dropdown;
-        row.appendChild(dropdownCell);
-      
-        var radioCell = document.createElement('td');
-        radioCell.textContent = formData.radio;
-        row.appendChild(radioCell);
-      
-        var checkboxCell = document.createElement('td');
-        checkboxCell.textContent = formData.checkbox.join(', ');
-        row.appendChild(checkboxCell);
-      
-        var textareaCell = document.createElement('td');
-        textareaCell.textContent = formData.textarea;
-        row.appendChild(textareaCell);
-      
+    
+        var divisionCell = document.createElement('td');
+        divisionCell.textContent = data.dropdown;
+        row.appendChild(divisionCell);
+    
+        var genderCell = document.createElement('td');
+        genderCell.textContent = data.radio;
+        row.appendChild(genderCell);
+    
+        var categoryCell = document.createElement('td');
+        categoryCell.textContent = data.checkbox.join(', ');
+        row.appendChild(categoryCell);
+    
+        var addressCell = document.createElement('td');
+        addressCell.textContent = data.textarea;
+        row.appendChild(addressCell);
+    
+        var dobCell = document.createElement('td');
+        dobCell.textContent = data.date;
+        row.appendChild(dobCell);
+    
         // Append the row to the table body
         tableBody.appendChild(row);
-      </script>
+      }
+    </script>
+    
       
   </body>
 </html>
