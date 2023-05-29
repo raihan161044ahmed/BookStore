@@ -183,25 +183,56 @@
 
     <!-- js -->
     <script>
+      // Retrieve the query parameters from the URL
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Retrieve the values from the query parameters
+      const email = urlParams.get("email");
+      const dropdown = urlParams.get("dropdown");
+      const radio = urlParams.get("radio");
+      const date = urlParams.get("date");
+      const checkbox = urlParams.get("checkbox");
+      const textarea = urlParams.get("textarea");
+
+      // Populate the input fields with the values
+      document.getElementById("email").value = email;
+      document.getElementById("dropdown").value = dropdown;
+      document.querySelector(
+        `input[name="radio"][value="${radio}"]`
+      ).checked = true;
+      document.getElementById("date").value = date;
+
+      // Split the checkbox values if it's a comma-separated string
+      const checkboxValues = checkbox ? checkbox.split(",") : [];
+
+      // Check the corresponding checkboxes
+      checkboxValues.forEach((value) => {
+        document.querySelector(
+          `input[name="checkbox"][value="${value}"]`
+        ).checked = true;
+      });
+
+      document.getElementById("textarea").value = textarea;
+
       // Get the form element
-      var form = document.querySelector("form");
+      const form = document.querySelector("form");
 
       // Define error message elements
-      var errorEmail = document.getElementById("error-email");
-      var errorGender = document.getElementById("error-gender");
-      var errorDate = document.getElementById("error-date");
-      var errorCheckbox = document.getElementById("error-checkbox");
+      const errorEmail = document.getElementById("error-email");
+      const errorGender = document.getElementById("error-gender");
+      const errorDate = document.getElementById("error-date");
+      const errorCheckbox = document.getElementById("error-checkbox");
 
       // Validate form inputs
       function validateForm() {
-        var email = document.getElementById("email").value;
-        var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+        const email = document.getElementById("email").value;
+        const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
-        var radio = document.getElementsByName("radio");
-        var date = document.getElementById("date").value.trim();
-        var currentDate = new Date();
-        var selectedDate = new Date(date);
-        var checkbox = document.querySelectorAll(
+        const radio = document.getElementsByName("radio");
+        const date = document.getElementById("date").value.trim();
+        const currentDate = new Date();
+        const selectedDate = new Date(date);
+        const checkbox = document.querySelectorAll(
           'input[name="checkbox"]:checked'
         );
 
@@ -210,7 +241,7 @@
         errorDate.textContent = "";
         errorCheckbox.textContent = "";
 
-        var isValid = true;
+        let isValid = true;
 
         if (!emailRegex.test(email)) {
           errorEmail.textContent = "Invalid email address";
@@ -235,7 +266,7 @@
           isValid = false;
         }
 
-        return isValid; // Return true if validation passes
+        return isValid;
       }
 
       // Add a submit event listener to the form
@@ -248,35 +279,49 @@
         }
 
         // Get the input values
-        var email = document.getElementById("email").value;
-        var radio = document.querySelector('input[name="radio"]:checked').value;
-        var date = document.getElementById("date").value;
-        var checkbox = document.querySelectorAll(
-          'input[name="checkbox"]:checked'
-        );
-        var checkboxValues = Array.from(checkbox).map(function (element) {
-          return element.value;
-        });
-
-        // Create an object to store the form data
-        var formData = {
-          email: email,
-          radio: radio,
-          date: date,
-          checkbox: checkboxValues,
-        };
+        const email = document.getElementById("email").value;
+        const dropdown = document.getElementById("dropdown").value;
+        const radio = document.querySelector(
+          'input[name="radio"]:checked'
+        ).value;
+        const date = document.getElementById("date").value;
+        const checkbox = Array.from(
+          document.querySelectorAll('input[name="checkbox"]:checked')
+        ).map((element) => element.value);
+        const textarea = document.getElementById("textarea").value;
 
         // Retrieve existing form data from local storage
-        var storedData = localStorage.getItem("formData");
-        var existingData = storedData ? JSON.parse(storedData) : [];
+        const storedData = localStorage.getItem("formData");
+        const existingData = storedData ? JSON.parse(storedData) : [];
 
-        // Append the new form data to the existing data
-        existingData.push(formData);
+        // Find the index of the form data to update
+        let index = -1;
 
-        // Store the updated form data in local storage
-        localStorage.setItem("formData", JSON.stringify(existingData));
+        existingData.forEach((data, i) => {
+          if (data.email === email) {
+            index = i;
+            return;
+          }
+        });
 
-        alert("Form Updated Successfully");
+        if (index !== -1) {
+          // Update the form data at the corresponding index
+          existingData[index] = {
+            email: email,
+            dropdown: dropdown,
+            radio: radio,
+            date: date,
+            checkbox: checkbox,
+            textarea: textarea,
+          };
+
+          // Store the updated form data in local storage
+          localStorage.setItem("formData", JSON.stringify(existingData));
+
+          alert("Form Updated Successfully");
+        } else {
+          alert("Form data not found for the specified email");
+        }
 
         // Navigate to the next page
         window.location.href = "display.html";
