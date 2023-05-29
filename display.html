@@ -24,8 +24,8 @@
         <thead>
           <tr>
             <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Password</th>
+            <!-- <th scope="col">Name</th>
+            <th scope="col">Password</th> -->
             <th scope="col">Email</th>
             <th scope="col">Division</th>
             <th scope="col">Gender</th>
@@ -73,13 +73,13 @@
         idCell.textContent = i + 1;
         row.appendChild(idCell);
 
-        var nameCell = document.createElement("td");
-        nameCell.textContent = data.name;
-        row.appendChild(nameCell);
+        // var nameCell = document.createElement("td");
+        // nameCell.textContent = data.name;
+        // row.appendChild(nameCell);
 
-        var passwordCell = document.createElement("td");
-        passwordCell.textContent = data.password;
-        row.appendChild(passwordCell);
+        // var passwordCell = document.createElement("td");
+        // passwordCell.textContent = data.password;
+        // row.appendChild(passwordCell);
 
         var emailCell = document.createElement("td");
         emailCell.textContent = data.email;
@@ -116,11 +116,11 @@
         editButton.addEventListener("click", function () {
           // Redirect to update.html page with the corresponding data
           var queryString =
-            "?name=" +
-            encodeURIComponent(data.name) +
-            "&password=" +
-            encodeURIComponent(data.password) +
-            "&email=" +
+            // "?name=" +
+            // encodeURIComponent(data.name) +
+            // "&password=" +
+            // encodeURIComponent(data.password) +
+            "?email=" +
             encodeURIComponent(data.email) +
             "&dropdown=" +
             encodeURIComponent(data.dropdown) +
@@ -139,6 +139,10 @@
         editCell.appendChild(editButton);
         row.appendChild(editCell);
 
+        // Retrieve existing form data from local storage
+        var storedData = localStorage.getItem("formData");
+        var existingData = storedData ? JSON.parse(storedData) : [];
+
         // Add delete button
         var deleteCell = document.createElement("td");
         var deleteButton = document.createElement("button");
@@ -146,8 +150,9 @@
         deleteButton.style.backgroundColor = "tomato";
         deleteButton.addEventListener("click", function () {
           // Find the index of the data object in the existingData array
-          var index = existingData.indexOf(data);
-
+          var index = existingData.findIndex(function (item) {
+            return item.id === data.id && item.date === data.date;
+          });
           // Check if the data object exists in the array
           if (index > -1) {
             // Remove the data object from the array
@@ -159,10 +164,9 @@
             // Update the local storage with the modified data
             localStorage.setItem("formData", JSON.stringify(existingData));
 
-            // Show a success message or perform any additional operations
-            alert("Data deleted successfully!");
           }
         });
+
         deleteCell.appendChild(deleteButton);
         row.appendChild(deleteCell);
 
