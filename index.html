@@ -22,9 +22,9 @@
   </head>
   <body>
     <div class="container">
-      <h2>Registration</h2>
-      <form action="./display.html" method="POST" id="formDataForm">
-        <div class="form-group">
+      <h2>Form Submission</h2>
+      <form id="formDataForm">
+        <!-- <div class="form-group">
           <label for="name">Name:</label>
           <input
             type="text"
@@ -43,18 +43,19 @@
             style="width: 70%"
             placeholder="Enter your password"
           />
-        </div>
+        </div> -->
         <div class="form-group">
           <label for="email">Email:</label>
           <input
             type="email"
-            class="form-control mb-3"
+            class="form-control"
             id="email"
             style="width: 70%"
             placeholder="Example@gmail.com"
           />
+          <small id="error-email" class="error-message text-danger"></small>
         </div>
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="dropdown">Division:</label>
           <select class="form-control mb-3" id="dropdown" style="width: 70%">
             <option value="" disabled selected>Select Division</option>
@@ -70,6 +71,7 @@
         </div>
         <div class="form-group">
           <label for="radio">Gender:</label><br />
+          <p id="error-gender" class="error-message text-danger"></p>
           <div class="form-check-inline">
             <label class="form-check-label">
               <input
@@ -94,14 +96,16 @@
             <label for="date" class="mb-2">Date Of Birth:</label>
             <input
               type="date"
-              class="form-control mb-3"
+              class="form-control"
               id="date"
-              style="width: 260%"
+              style="width: 530px"
             />
+            <p id="error-date" class="error-message text-danger"></p>
           </div>
         </div>
-        <div class="form-group">
+        <div class="form-group mt-3">
           <label for="checkbox">Category:</label><br />
+          <p id="error-checkbox" class="error-message text-danger"></p>
           <div class="form-check-inline mb-3">
             <label class="form-check-label">
               <input
@@ -181,11 +185,15 @@
     <script>
       // Get the form element
       var form = document.querySelector("form");
+
+      // Define error message elements
+      var errorEmail = document.getElementById("error-email");
+      var errorGender = document.getElementById("error-gender");
+      var errorDate = document.getElementById("error-date");
+      var errorCheckbox = document.getElementById("error-checkbox");
+
       // Validate form inputs
       function validateForm() {
-        var name = document.getElementById("name").value;
-        var password = document.getElementById("password").value;
-
         var email = document.getElementById("email").value;
         var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
@@ -197,29 +205,37 @@
           'input[name="checkbox"]:checked'
         );
 
-        if (name == null || name.trim() === "") {
-          alert("Name can't be blank");
-          return false;
-        } else if (password == null || password.trim() === "") {
-          alert("Password can't be blank");
-          return false;
-        } else if (!emailRegex.test(email)) {
-          alert("Invalid email address");
-          return false;
-        } else if (!(radio[0].checked || radio[1].checked)) {
-          alert("Please Select Gender");
-          return false;
-        } else if (date === "") {
-          alert("Date field is required");
-          return false;
-        } else if (selectedDate > currentDate) {
-          alert("Invalid date. Please select a date in the past or today");
-          return false;
-        } else if (checkbox.length === 0) {
-          alert("Please select at least one category");
-          return false;
+        errorEmail.textContent = "";
+        errorGender.textContent = "";
+        errorDate.textContent = "";
+        errorCheckbox.textContent = "";
+
+        var isValid = true;
+
+        if (!emailRegex.test(email)) {
+          errorEmail.textContent = "Invalid email address";
+          isValid = false;
         }
-        return true; // Return true if validation passes
+
+        if (!(radio[0].checked || radio[1].checked)) {
+          errorGender.textContent = "Please select a gender";
+          isValid = false;
+        }
+
+        if (date === "") {
+          errorDate.textContent = "Date field is required";
+          isValid = false;
+        } else if (selectedDate > currentDate) {
+          errorDate.textContent = "Please select a date in the past or today";
+          isValid = false;
+        }
+
+        if (checkbox.length === 0) {
+          errorCheckbox.textContent = "Please select at least one category";
+          isValid = false;
+        }
+
+        return isValid; // Return true if validation passes
       }
 
       // Add a submit event listener to the form
@@ -230,31 +246,24 @@
         if (!validateForm()) {
           return; // Stop execution if validation fails
         }
+
         // Get the input values
-        var name = document.querySelector("#name").value;
-        var password = document.querySelector("#password").value;
-        var email = document.querySelector("#email").value;
-        var dropdown = document.querySelector("#dropdown").value;
+        var email = document.getElementById("email").value;
         var radio = document.querySelector('input[name="radio"]:checked').value;
+        var date = document.getElementById("date").value;
         var checkbox = document.querySelectorAll(
           'input[name="checkbox"]:checked'
         );
         var checkboxValues = Array.from(checkbox).map(function (element) {
           return element.value;
         });
-        var date = document.getElementById("date").value;
-        var textarea = document.querySelector("#textarea").value;
 
         // Create an object to store the form data
         var formData = {
-          name: name,
-          password: password,
           email: email,
-          dropdown: dropdown,
           radio: radio,
-          checkbox: checkboxValues,
-          textarea: textarea,
           date: date,
+          checkbox: checkboxValues,
         };
 
         // Retrieve existing form data from local storage
@@ -267,11 +276,10 @@
         // Store the updated form data in local storage
         localStorage.setItem("formData", JSON.stringify(existingData));
 
-        // Clear the form inputs
-        form.reset();
+        alert("Form Inserted Successfully");
 
-        // Show a success message
-        alert("Form submitted successfully!");
+        // Navigate to the next page
+        window.location.href = "display.html";
       });
     </script>
   </body>
