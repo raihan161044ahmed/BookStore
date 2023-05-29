@@ -70,6 +70,133 @@
 
         // Create table cells for each data field
         var idCell = document.createElement("td");
+        idCell.textContent =i + 1;
+        row.appendChild(idCell);
+
+        // var nameCell = document.createElement("td");
+        // nameCell.textContent = data.name;
+        // row.appendChild(nameCell);
+
+        // var passwordCell = document.createElement("td");
+        // passwordCell.textContent = data.password;
+        // row.appendChild(passwordCell);
+
+        var emailCell = document.createElement("td");
+        emailCell.textContent = data.email;
+        row.appendChild(emailCell);
+
+        var divisionCell = document.createElement("td");
+        divisionCell.textContent = data.dropdown;
+        row.appendChild(divisionCell);
+
+        var genderCell = document.createElement("td");
+        genderCell.textContent = data.radio;
+        row.appendChild(genderCell);
+
+        var categoryCell = document.createElement("td");
+        categoryCell.textContent = data.checkbox.join(", ");
+        row.appendChild(categoryCell);
+
+        var addressCell = document.createElement("td");
+        addressCell.textContent = data.textarea;
+        addressCell.style.whiteSpace = "pre-wrap";
+        addressCell.style.minWidth = "10px";
+        addressCell.style.maxWidth = "200px";
+        row.appendChild(addressCell);
+
+        var dobCell = document.createElement("td");
+        dobCell.textContent = data.date;
+        row.appendChild(dobCell);
+
+        // Add edit button
+        var editCell = document.createElement("td");
+        var editButton = document.createElement("button");
+        editButton.textContent = "Update";
+        editButton.style.backgroundColor = "gold";
+        editButton.addEventListener("click", function handleClick() {
+          // Redirect to update page with the following data
+          var queryString =
+            "?email=" +
+            encodeURIComponent(data.email) +
+            "&dropdown=" +
+            encodeURIComponent(data.dropdown) +
+            "&radio=" +
+            encodeURIComponent(data.radio) +
+            "&date=" +
+            encodeURIComponent(data.date) +
+            "&checkbox=" +
+            encodeURIComponent(data.checkbox.join(",")) +
+            "&textarea=" +
+            encodeURIComponent(data.textarea);
+
+          // Redirect to update.html with the query string
+          window.location.href = "update.html" + queryString;
+        });
+
+        editCell.appendChild(editButton);
+        row.appendChild(editCell);
+
+        // Retrieve existing form data from local storage
+        var storedData = localStorage.getItem("formData");
+        var existingData = storedData ? JSON.parse(storedData) : [];
+
+        // Add delete button
+        var deleteCell = document.createElement("td");
+        var deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete";
+        deleteButton.style.backgroundColor = "tomato";
+        deleteButton.setAttribute("data-email", data.email);
+        deleteButton.addEventListener("click", function () {
+          var email = this.getAttribute("data-email");
+          handleDeleteClick(email);
+        });
+
+        deleteCell.appendChild(deleteButton);
+        row.appendChild(deleteCell);
+
+        // Append the row to the table body
+        tableBody.appendChild(row);
+      }
+
+      // Function to handle delete button click
+      function handleDeleteClick(email) {
+        // Find the index of the data object in the formData array
+        var index = formData.findIndex(function (item) {
+          return item.email === email;
+        });
+
+        // Check if the data object exists in the array
+        if (index > -1) {
+          // Remove the data object from the array
+          formData.splice(index, 1);
+
+          // Remove the corresponding row from the table
+          tableBody.removeChild(tableBody.childNodes[index]);
+
+          // Update the local storage with the modified data
+          localStorage.setItem("formData", JSON.stringify(formData));
+        }
+      }
+    </script>
+    <!-- <script>
+      // Retrieve the form data from local storage
+      var storedData = localStorage.getItem("formData");
+
+      // Parse the form data JSON string
+      var formData = JSON.parse(storedData);
+
+      // Get the table body element
+      var tableBody = document.getElementById("tableBody");
+
+      // Iterate over the form data and create table rows
+      for (var i = 0; i < formData.length; i++) {
+        var data = formData[i];
+
+        // Create a table row
+        var row = document.createElement("tr");
+
+        // Create table cells for each data field
+        var idCell = document.createElement("td");
         idCell.textContent = i + 1;
         row.appendChild(idCell);
 
@@ -99,9 +226,9 @@
 
         var addressCell = document.createElement("td");
         addressCell.textContent = data.textarea;
-        addressCell.style.whiteSpace = "pre-wrap"; // Apply white-space CSS property
-        addressCell.style.minWidth = "10px"; // Set minimum width for the cell
-        addressCell.style.maxWidth = "200px"; // Set maximum width for the cell
+        addressCell.style.whiteSpace = "pre-wrap";
+        addressCell.style.minWidth = "10px";
+        addressCell.style.maxWidth = "200px";
         row.appendChild(addressCell);
 
         var dobCell = document.createElement("td");
@@ -113,58 +240,51 @@
         var editButton = document.createElement("button");
         editButton.textContent = "Update";
         editButton.style.backgroundColor = "gold";
-        editButton.addEventListener("click", function () {
-          // Redirect to update.html page with the corresponding data
+        editButton.addEventListener("click", function handleClick() {
+          // Get the corresponding table row
+          var row = this.closest("tr");
+
+          // Get the data from the row
+          var email = row.querySelector("td.email").textContent;
+          var dropdown = row.querySelector("td.dropdown").textContent;
+          var radio = row.querySelector("td.radio").textContent;
+          var date = row.querySelector("td.date").textContent;
+          var checkbox = row
+            .querySelector("td.checkbox")
+            .textContent.split(",");
+          var textarea = row.querySelector("td.textarea").textContent;
+
+          // Redirect to update page with the following data
           var queryString =
-            // "?name=" +
-            // encodeURIComponent(data.name) +
-            // "&password=" +
-            // encodeURIComponent(data.password) +
             "?email=" +
-            encodeURIComponent(data.email) +
+            encodeURIComponent(email) +
             "&dropdown=" +
-            encodeURIComponent(data.dropdown) +
+            encodeURIComponent(dropdown) +
             "&radio=" +
-            encodeURIComponent(data.radio) +
+            encodeURIComponent(radio) +
             "&date=" +
-            encodeURIComponent(data.date) +
+            encodeURIComponent(date) +
             "&checkbox=" +
-            encodeURIComponent(data.checkbox.join(",")) +
+            encodeURIComponent(checkbox.join(",")) +
             "&textarea=" +
-            encodeURIComponent(data.textarea);
+            encodeURIComponent(textarea);
 
           // Redirect to update.html with the query string
           window.location.href = "update.html" + queryString;
         });
+
         editCell.appendChild(editButton);
         row.appendChild(editCell);
-
-        // Retrieve existing form data from local storage
-        var storedData = localStorage.getItem("formData");
-        var existingData = storedData ? JSON.parse(storedData) : [];
 
         // Add delete button
         var deleteCell = document.createElement("td");
         var deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
         deleteButton.style.backgroundColor = "tomato";
+        deleteButton.setAttribute("data-email", data.email);
         deleteButton.addEventListener("click", function () {
-          // Find the index of the data object in the existingData array
-          var index = existingData.findIndex(function (item) {
-            return item.id === data.id && item.date === data.date;
-          });
-          // Check if the data object exists in the array
-          if (index > -1) {
-            // Remove the data object from the array
-            existingData.splice(index, 1);
-
-            // Remove the corresponding row from the table
-            tableBody.removeChild(row);
-
-            // Update the local storage with the modified data
-            localStorage.setItem("formData", JSON.stringify(existingData));
-
-          }
+          var email = this.getAttribute("data-email");
+          handleDeleteClick(email);
         });
 
         deleteCell.appendChild(deleteButton);
@@ -173,6 +293,26 @@
         // Append the row to the table body
         tableBody.appendChild(row);
       }
-    </script>
+
+      // Function to handle delete button click
+      function handleDeleteClick(email) {
+        // Find the index of the data object in the formData array
+        var index = formData.findIndex(function (item) {
+          return item.email === email;
+        });
+
+        // Check if the data object exists in the array
+        if (index > -1) {
+          // Remove the data object from the array
+          formData.splice(index, 1);
+
+          // Remove the corresponding row from the table
+          tableBody.removeChild(tableBody.childNodes[index]);
+
+          // Update the local storage with the modified data
+          localStorage.setItem("formData", JSON.stringify(formData));
+        }
+      }
+    </script> -->
   </body>
 </html>
