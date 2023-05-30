@@ -18,6 +18,22 @@
       .del {
         margin-left: 90%;
       }
+      /* Pagination styles */
+      .pagination {
+        display: flex;
+        justify-content: start;
+        position: fixed;
+        bottom: 25%;
+        left: 12%;
+        z-index: 999;
+      }
+      .pagination button {
+        margin: 0 7px;
+      }
+      .pagination .active {
+        font-weight: bold;
+        font-size: 1em;
+      }
     </style>
   </head>
   <body>
@@ -44,6 +60,8 @@
         </thead>
         <tbody id="tableBody"></tbody>
       </table>
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
     </div>
 
     <script
@@ -68,15 +86,109 @@
       // Get the table body element
       var tableBody = document.getElementById("tableBody");
 
-      // Iterate over the form data and create table rows
-      for (var i = 0; i < formData.length; i++) {
-        var data = formData[i];
+      // Number of items to display per page
+      var itemsPerPage = 5;
 
-        // Create a table row
+      // Function to display the table rows for the specified page
+      function displayPage(pageNumber) {
+        // Clear the table body
+        tableBody.innerHTML = "";
+
+        // Calculate the start and end indices of the items for the current page
+        var startIndex = (pageNumber - 1) * itemsPerPage;
+        var endIndex = Math.min(startIndex + itemsPerPage, formData.length);
+
+        // Iterate over the items for the current page and create table rows
+        for (var i = startIndex; i < endIndex; i++) {
+          var data = formData[i];
+          var row = createTableRow(data, i);
+          tableBody.appendChild(row);
+        }
+      }
+
+      // Calculate the total number of pages
+      var totalPages = Math.ceil(formData.length / itemsPerPage);
+
+      // Function to create the pagination buttons
+      function createPaginationButtons() {
+        // Clear the pagination div
+        var paginationDiv = document.getElementById("pagination");
+        paginationDiv.innerHTML = "";
+
+        // Create and append the pagination buttons
+        for (var i = 1; i <= totalPages; i++) {
+          var button = document.createElement("button");
+          button.textContent = i;
+          button.addEventListener("click", function () {
+            var pageNumber = parseInt(this.textContent);
+            displayPage(pageNumber);
+          });
+
+          paginationDiv.appendChild(button);
+        }
+      }
+
+      // Initial display - show the first page
+      displayPage(1);
+
+      // Create the pagination buttons
+      createPaginationButtons();
+
+      // Get the delete button element
+      var deleteButton = document.getElementById("delete-button");
+
+      // Add a click event listener to the delete button
+      deleteButton.addEventListener("click", function () {
+        // Get all the checkboxes that are checked
+        var checkboxes = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
+
+        // Create an array to store the indices of rows to be deleted
+        var indicesToDelete = [];
+
+        // Iterate over the checkboxes and store the indices of rows to be deleted
+        checkboxes.forEach(function (checkbox) {
+          var row = checkbox.parentNode.parentNode;
+          var dataIndex = parseInt(row.getAttribute("data-index"));
+          indicesToDelete.push(dataIndex);
+          tableBody.removeChild(row);
+        });
+
+        // Sort the indicesToDelete array in descending order
+        indicesToDelete.sort(function (a, b) {
+          return b - a;
+        });
+
+        // Remove the corresponding data objects from the formData array and update local storage
+        indicesToDelete.forEach(function (index) {
+          formData.splice(index, 1);
+        });
+
+        // Update the data-index attribute and ID values of the remaining rows
+        var rows = tableBody.getElementsByTagName("tr");
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          row.setAttribute("data-index", i);
+          row.getElementsByTagName("td")[0].textContent = i + 1;
+        }
+
+        // Update the total number of pages
+        totalPages = Math.ceil(formData.length / itemsPerPage);
+
+        // Refresh the page
+        location.reload();
+
+        // Update the local storage with the modified data
+        localStorage.setItem("formData", JSON.stringify(formData));
+      });
+
+      // Function to create a table row
+      function createTableRow(data, index) {
         var row = document.createElement("tr");
 
         // Set a data-index attribute on the row for referencing the index later
-        row.setAttribute("data-index", i);
+        row.setAttribute("data-index", index);
 
         // Create checkbox column
         var checkboxCell = document.createElement("td");
@@ -88,7 +200,7 @@
 
         // Create table cells for each data field
         var idCell = document.createElement("td");
-        idCell.textContent = i + 1;
+        idCell.textContent = index + 1;
         row.appendChild(idCell);
 
         var emailCell = document.createElement("td");
@@ -141,54 +253,8 @@
         deleteCell.appendChild(deleteButton);
         row.appendChild(deleteCell);
 
-        // Append the row to the table body
-        tableBody.appendChild(row);
+        return row;
       }
-
-      // Get the delete button element
-      var deleteButton = document.getElementById("delete-button");
-
-      // Add a click event listener to the delete button
-      deleteButton.addEventListener("click", function () {
-        // Get all the checkboxes that are checked
-        var checkboxes = document.querySelectorAll(
-          'input[type="checkbox"]:checked'
-        );
-
-        // Create an array to store the indices of rows to be deleted
-        var indicesToDelete = [];
-
-        // Iterate over the checkboxes and store the indices of rows to be deleted
-        checkboxes.forEach(function (checkbox) {
-          var row = checkbox.parentNode.parentNode;
-          var dataIndex = parseInt(row.getAttribute("data-index"));
-          indicesToDelete.push(dataIndex);
-          tableBody.removeChild(row);
-        });
-
-        // Sort the indicesToDelete array in descending order
-        indicesToDelete.sort(function (a, b) {
-          return b - a;
-        });
-
-        // Remove the corresponding data objects from the formData array and update local storage
-        indicesToDelete.forEach(function (index) {
-          formData.splice(index, 1);
-        });
-        localStorage.setItem("formData", JSON.stringify(formData));
-
-        // Update the data-index attribute and ID values of the remaining rows
-        var rows = tableBody.getElementsByTagName("tr");
-        for (var i = 0; i < rows.length; i++) {
-          var row = rows[i];
-          row.setAttribute("data-index", i);
-          row.getElementsByTagName("td")[0].textContent = i + 1;
-        }
-        // Refresh the page
-        location.reload();
-        // Update the local storage with the modified data
-        localStorage.setItem("formData", JSON.stringify(formData));
-      });
 
       // Function to create an edit button handler
       function createEditHandler(email) {
@@ -236,6 +302,7 @@
           // Update the local storage with the modified data
           localStorage.setItem("formData", JSON.stringify(formData));
         }
+
         // Refresh the page
         location.reload();
       }
