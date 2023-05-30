@@ -183,6 +183,10 @@
 
     <!-- js -->
     <script>
+      // Retrieve existing form data from local storage
+      var storedData = localStorage.getItem("formData");
+      var existingData = storedData ? JSON.parse(storedData) : [];
+
       // Get the form element
       var form = document.querySelector("form");
 
@@ -194,7 +198,7 @@
 
       // Validate form inputs
       function validateForm() {
-        var email = document.getElementById("email").value;
+        var email = document.getElementById("email").value.trim();
         var emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
 
         var radio = document.getElementsByName("radio");
@@ -204,7 +208,7 @@
         var checkbox = document.querySelectorAll(
           'input[name="checkbox"]:checked'
         );
-
+        // reset error msg
         errorEmail.textContent = "";
         errorGender.textContent = "";
         errorDate.textContent = "";
@@ -212,9 +216,26 @@
 
         var isValid = true;
 
-        if (!emailRegex.test(email)) {
-          errorEmail.textContent = "Invalid email address";
+        // Check if the email is empty
+        if (email === "") {
+          errorEmail.textContent = "Email is required";
           isValid = false;
+        } else {
+          // Validate the email format using regular expression
+          var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(email)) {
+            errorEmail.textContent = "Invalid email address";
+            isValid = false;
+          } else {
+            // Check if the email already exists in the formData array
+            var isDuplicateEmail = existingData.some(function (data) {
+              return data.email === email;
+            });
+            if (isDuplicateEmail) {
+              errorEmail.textContent = "Email address already exists";
+              isValid = false;
+            }
+          }
         }
 
         if (!(radio[0].checked || radio[1].checked)) {
@@ -259,10 +280,6 @@
           return element.value;
         });
         var textarea = document.getElementById("textarea").value;
-
-        // Retrieve existing form data from local storage
-        var storedData = localStorage.getItem("formData");
-        var existingData = storedData ? JSON.parse(storedData) : [];
 
         // Create an object to store the form data with id
         var formData = {
