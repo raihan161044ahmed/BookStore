@@ -15,14 +15,21 @@
         margin-top: 1.5%;
         padding: 40px;
       }
+      .del {
+        margin-left: 90%;
+      }
     </style>
   </head>
   <body>
     <div class="container bg-white">
       <h2>Display Data</h2>
+      <button id="delete-button" class="btn btn-danger btn-lg del">
+        Delete
+      </button>
       <table class="table table-striped mt-5">
         <thead>
           <tr>
+            <th></th>
             <th scope="col">Id</th>
             <!-- <th scope="col">Name</th>
             <th scope="col">Password</th> -->
@@ -70,6 +77,14 @@
 
         // Set a data-index attribute on the row for referencing the index later
         row.setAttribute("data-index", i);
+
+        // Create checkbox column
+        var checkboxCell = document.createElement("td");
+        var checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = data.email;
+        checkboxCell.appendChild(checkbox);
+        row.appendChild(checkboxCell);
 
         // Create table cells for each data field
         var idCell = document.createElement("td");
@@ -130,6 +145,51 @@
         tableBody.appendChild(row);
       }
 
+      // Get the delete button element
+      var deleteButton = document.getElementById("delete-button");
+
+      // Add a click event listener to the delete button
+      deleteButton.addEventListener("click", function () {
+        // Get all the checkboxes that are checked
+        var checkboxes = document.querySelectorAll(
+          'input[type="checkbox"]:checked'
+        );
+
+        // Create an array to store the indices of rows to be deleted
+        var indicesToDelete = [];
+
+        // Iterate over the checkboxes and store the indices of rows to be deleted
+        checkboxes.forEach(function (checkbox) {
+          var row = checkbox.parentNode.parentNode;
+          var dataIndex = parseInt(row.getAttribute("data-index"));
+          indicesToDelete.push(dataIndex);
+          tableBody.removeChild(row);
+        });
+
+        // Sort the indicesToDelete array in descending order
+        indicesToDelete.sort(function (a, b) {
+          return b - a;
+        });
+
+        // Remove the corresponding data objects from the formData array and update local storage
+        indicesToDelete.forEach(function (index) {
+          formData.splice(index, 1);
+        });
+        localStorage.setItem("formData", JSON.stringify(formData));
+
+        // Update the data-index attribute and ID values of the remaining rows
+        var rows = tableBody.getElementsByTagName("tr");
+        for (var i = 0; i < rows.length; i++) {
+          var row = rows[i];
+          row.setAttribute("data-index", i);
+          row.getElementsByTagName("td")[0].textContent = i + 1;
+        }
+        // Refresh the page
+        location.reload();
+        // Update the local storage with the modified data
+        localStorage.setItem("formData", JSON.stringify(formData));
+      });
+
       // Function to create an edit button handler
       function createEditHandler(email) {
         return function handleClick() {
@@ -173,20 +233,11 @@
           // Remove the data object from the array
           formData.splice(index, 1);
 
-          // Remove the corresponding row from the table
-          tableBody.removeChild(tableBody.childNodes[index]);
-
-          // Update the ID values of the remaining rows
-          var rows = tableBody.getElementsByTagName("tr");
-          for (var i = 0; i < rows.length; i++) {
-            var row = rows[i];
-            var idCell = row.getElementsByTagName("td")[0];
-            idCell.textContent = i + 1;
-          }
-
           // Update the local storage with the modified data
           localStorage.setItem("formData", JSON.stringify(formData));
         }
+        // Refresh the page
+        location.reload();
       }
     </script>
   </body>
